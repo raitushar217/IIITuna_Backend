@@ -31,3 +31,18 @@ export const getStudyMaterials: RequestHandler = async (req, res) => {
   const materials = await ClassesService.getStudyMaterials(user, subjectCode);
   res.json(materials);
 };
+
+export const uploadStudyMaterial: RequestHandler = async (req, res) => {
+  const user = req.auth!.user;
+  const subjectCode = (req.body.subject_code || req.body.subjectCode || 'SUB1').toString();
+  const caption = (req.body.caption || req.body.filename || req.body.title || '').toString();
+
+  const material = await ClassesService.addStudyMaterial(user, {
+    subject_code: subjectCode,
+    caption,
+    file: req.file,
+  });
+
+  res.status(201).json(material);
+};
+

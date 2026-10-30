@@ -169,60 +169,104 @@ export async function listTeacherClasses(user: User) {
   }));
 }
 
+export interface StudyMaterialItem {
+  id?: string;
+  subject_code: string;
+  filename: string;
+  timestamp: string;
+  authorName: string;
+  authorDP: string;
+  fileLocation: string;
+}
+
+const dynamicNotes: StudyMaterialItem[] = [];
+
+const defaultDemoNotes: StudyMaterialItem[] = [
+  {
+    subject_code: 'SUB1',
+    filename: 'Math Notes - Linear Algebra & Calculus.pdf',
+    timestamp: '07 Oct 2026',
+    authorName: 'Dr. John Doe',
+    authorDP: '',
+    fileLocation: 'uploads/demo_assignment.pdf',
+  },
+  {
+    subject_code: 'SUB1',
+    filename: 'Fourier Transform Lecture Handout.pdf',
+    timestamp: '05 Oct 2026',
+    authorName: 'Dr. John Doe',
+    authorDP: '',
+    fileLocation: 'uploads/demo_assignment.pdf',
+  },
+  {
+    subject_code: 'SUB2',
+    filename: 'Physics Notes - Electromagnetism & Waves.pdf',
+    timestamp: '06 Oct 2026',
+    authorName: 'Dr. Jane Smith',
+    authorDP: '',
+    fileLocation: 'uploads/demo_assignment.pdf',
+  },
+  {
+    subject_code: 'SUB2',
+    filename: 'Maxwell Equations & Optics Guide.pdf',
+    timestamp: '04 Oct 2026',
+    authorName: 'Dr. Jane Smith',
+    authorDP: '',
+    fileLocation: 'uploads/demo_assignment.pdf',
+  },
+  {
+    subject_code: 'SUB3',
+    filename: 'CS Notes - Data Structures & Algorithms.pdf',
+    timestamp: '07 Oct 2026',
+    authorName: 'Dr. Alan Turing',
+    authorDP: '',
+    fileLocation: 'uploads/demo_assignment.pdf',
+  },
+  {
+    subject_code: 'SUB3',
+    filename: 'Red-Black Trees & Graphs Cheatsheet.pdf',
+    timestamp: '03 Oct 2026',
+    authorName: 'Dr. Alan Turing',
+    authorDP: '',
+    fileLocation: 'uploads/demo_assignment.pdf',
+  },
+];
+
+export async function addStudyMaterial(
+  user: User,
+  data: { subject_code: string; caption?: string; file?: Express.Multer.File }
+): Promise<StudyMaterialItem> {
+  const teacherRepo = AppDataSource.getRepository(Teacher);
+  const teacher = await teacherRepo.findOne({
+    where: { user: { identification_number: user.identification_number } },
+  });
+  const teacherName = teacher ? `${teacher.first_name} ${teacher.last_name}`.trim() : 'Instructor';
+  const timestamp = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  const filename = data.caption?.trim() || data.file?.originalname || 'Lecture Material.pdf';
+  const fileLocation = data.file ? `uploads/${data.file.filename}` : 'uploads/demo_assignment.pdf';
+
+  const newItem: StudyMaterialItem = {
+    subject_code: data.subject_code,
+    filename,
+    timestamp,
+    authorName: teacherName,
+    authorDP: '',
+    fileLocation,
+  };
+
+  dynamicNotes.unshift(newItem);
+  return newItem;
+}
+
 export async function getStudyMaterials(user: User, subjectCode?: string) {
-  // Demo study notes for classes
-  const allNotes = [
-    {
-      subject_code: 'SUB1',
-      filename: 'Math Notes - Linear Algebra & Calculus.pdf',
-      timestamp: '07 Oct 2026',
-      authorName: 'Dr. John Doe',
-      authorDP: '',
-      fileLocation: 'https://example.com/math-notes.pdf',
-    },
-    {
-      subject_code: 'SUB1',
-      filename: 'Fourier Transform Lecture Handout.pdf',
-      timestamp: '05 Oct 2026',
-      authorName: 'Dr. John Doe',
-      authorDP: '',
-      fileLocation: 'https://example.com/fourier-handout.pdf',
-    },
-    {
-      subject_code: 'SUB2',
-      filename: 'Physics Notes - Electromagnetism & Waves.pdf',
-      timestamp: '06 Oct 2026',
-      authorName: 'Dr. Jane Smith',
-      authorDP: '',
-      fileLocation: 'https://example.com/physics-notes.pdf',
-    },
-    {
-      subject_code: 'SUB2',
-      filename: 'Maxwell Equations & Optics Guide.pdf',
-      timestamp: '04 Oct 2026',
-      authorName: 'Dr. Jane Smith',
-      authorDP: '',
-      fileLocation: 'https://example.com/maxwell-guide.pdf',
-    },
-    {
-      subject_code: 'SUB3',
-      filename: 'CS Notes - Data Structures & Algorithms.pdf',
-      timestamp: '07 Oct 2026',
-      authorName: 'Dr. Alan Turing',
-      authorDP: '',
-      fileLocation: 'https://example.com/dsa-notes.pdf',
-    },
-    {
-      subject_code: 'SUB3',
-      filename: 'Red-Black Trees & Graphs Cheatsheet.pdf',
-      timestamp: '03 Oct 2026',
-      authorName: 'Dr. Alan Turing',
-      authorDP: '',
-      fileLocation: 'https://example.com/trees-graphs.pdf',
-    },
-  ];
+  const allNotes = [...dynamicNotes, ...defaultDemoNotes];
 
   if (user.role === 'teacher') {
+    if (subjectCode) {
+      return allNotes.filter(
+        (n) => n.subject_code === subjectCode || n.subject_code.toLowerCase().includes(subjectCode.toLowerCase())
+      );
+    }
     return allNotes;
   }
 
@@ -230,9 +274,16 @@ export async function getStudyMaterials(user: User, subjectCode?: string) {
   const studentClasses = await listStudentClasses(user);
   const registeredSubjectCodes = new Set(studentClasses.map((c) => c.SubjectID));
 
-  let filtered = allNotes.filter((n) => registeredSubjectCodes.has(n.subject_code));
+  let filtered = allNotes.filter(
+    (n) => registeredSubjectCodes.has(n.subject_code) || (subjectCode && n.subject_code === subjectCode)
+  );
+
   if (subjectCode) {
-    filtered = filtered.filter((n) => n.subject_code === subjectCode);
+    const byCode = allNotes.filter(
+      (n) => n.subject_code === subjectCode || n.subject_code.toLowerCase().includes(subjectCode.toLowerCase())
+    );
+    if (byCode.length > 0) return byCode;
   }
-  return filtered;
+
+  return filtered.length > 0 ? filtered : allNotes;
 }
