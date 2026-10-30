@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: iiituna-backend
+    env: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: SUPABASE_DB_HOST
+        sync: false
+      - key: SUPABASE_DB_PORT
+        value: 6543
+      - key: SUPABASE_DB_NAME
+        value: postgres
+      - key: SUPABASE_DB_USER
+        sync: false
+      - key: SUPABASE_DB_PASS
+        sync: false
+      - key: UPLOAD_DIR
+        value: uploads
+      - key: TOKEN_BYTES
+        value: 32
