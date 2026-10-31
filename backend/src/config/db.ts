@@ -13,6 +13,7 @@ import {
   Teacher,
   TeachingAssignment,
   User,
+  ProctoringIncident,
 } from '@/entities/User';
 import { Assignment, AssignmentSubmission } from '@/entities/Assignment';
 import { Notice } from '@/entities/Notice';
@@ -87,6 +88,7 @@ export const AppDataSource = new DataSource({
     StudentSelectedQuestionOption,
     GradeCard,
     AttendanceSession,
+    ProctoringIncident,
   ],
 });
 

@@ -31,19 +31,36 @@ export async function listAvailableClasses(user: User) {
     }
   }
 
-  return teachingAssignments.map((ta) => ({
-    id: ta.id,
-    subject_code: ta.subject.subject_code,
-    subject_name: ta.subject.subject_name,
-    teacher_id: ta.teacher.user_id,
-    teacher_name: `${ta.teacher.first_name} ${ta.teacher.last_name}`,
-    section_code: ta.section?.section_code ?? 'General',
-    credits: ta.subject.credits ?? 3,
-    semester: `${ta.semester}${ta.semester === 1 ? 'st' : ta.semester === 2 ? 'nd' : ta.semester === 3 ? 'rd' : 'th'} Semester`,
-    academic_year: ta.academic_year,
-    registration_status: regMap.get(ta.id) ?? 'unregistered',
-    is_registered: regMap.has(ta.id) && regMap.get(ta.id) === 'accepted',
-  }));
+  return teachingAssignments.map((ta) => {
+    const isStreamElective = ta.subject.course_type === 'stream_elective';
+    let isStreamLocked = false;
+    let streamLockReason: string | null = null;
+
+    if (isStreamElective && student && student.current_semester >= 5 && student.enrolled_stream) {
+      if (ta.subject.stream_name && ta.subject.stream_name !== student.enrolled_stream) {
+        isStreamLocked = true;
+        streamLockReason = `Locked to ${student.enrolled_stream} track`;
+      }
+    }
+
+    return {
+      id: ta.id,
+      subject_code: ta.subject.subject_code,
+      subject_name: ta.subject.subject_name,
+      teacher_id: ta.teacher.user_id,
+      teacher_name: `${ta.teacher.first_name} ${ta.teacher.last_name}`,
+      section_code: ta.section?.section_code ?? 'General',
+      credits: ta.subject.credits ?? 3,
+      semester: `${ta.semester}${ta.semester === 1 ? 'st' : ta.semester === 2 ? 'nd' : ta.semester === 3 ? 'rd' : 'th'} Semester`,
+      academic_year: ta.academic_year,
+      course_type: ta.subject.course_type ?? 'core',
+      stream_name: ta.subject.stream_name ?? null,
+      is_stream_locked: isStreamLocked,
+      stream_lock_reason: streamLockReason,
+      registration_status: regMap.get(ta.id) ?? 'unregistered',
+      is_registered: regMap.has(ta.id) && regMap.get(ta.id) === 'accepted',
+    };
+  });
 }
 
 export async function registerForClass(user: User, payload: { teaching_assignment_id?: number; subject_code?: string }) {
@@ -71,6 +88,20 @@ export async function registerForClass(user: User, payload: { teaching_assignmen
   }
 
   if (!ta) throw new HttpError(404, 'Class not found');
+
+  // Enforce Stream-Locking for Semester 5+ Electives
+  if (ta.subject.course_type === 'stream_elective' && student.current_semester >= 5) {
+    if (student.enrolled_stream && ta.subject.stream_name && student.enrolled_stream !== ta.subject.stream_name) {
+      throw new HttpError(
+        400,
+        `Elective locked! You are enrolled in the '${student.enrolled_stream}' specialization track and cannot take '${ta.subject.stream_name}' electives.`
+      );
+    }
+    if (!student.enrolled_stream && ta.subject.stream_name) {
+      student.enrolled_stream = ta.subject.stream_name;
+      await studentRepo.save(student);
+    }
+  }
 
   let existing = await regRepo.findOne({
     where: {
@@ -138,6 +169,8 @@ export async function listStudentClasses(user: User) {
       Credits: String(ta.subject.credits ?? 3),
       Semester: `${ta.semester}${ta.semester === 1 ? 'st' : ta.semester === 2 ? 'nd' : ta.semester === 3 ? 'rd' : 'th'} Semester`,
       AcademicSession: ta.academic_year,
+      CourseType: ta.subject.course_type ?? 'core',
+      StreamName: ta.subject.stream_name ?? null,
     };
   });
 }
@@ -166,6 +199,8 @@ export async function listTeacherClasses(user: User) {
     Credits: String(ta.subject.credits ?? 3),
     Semester: `${ta.semester}${ta.semester === 1 ? 'st' : ta.semester === 2 ? 'nd' : ta.semester === 3 ? 'rd' : 'th'} Semester`,
     AcademicSession: ta.academic_year,
+    CourseType: ta.subject.course_type ?? 'core',
+    StreamName: ta.subject.stream_name ?? null,
   }));
 }
 

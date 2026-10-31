@@ -18,6 +18,7 @@ import { sectionRoutes } from '@/routes/section.routes';
 import { classesRoutes } from '@/routes/classes.routes';
 import { gradeRoutes } from '@/routes/grades.routes';
 import { attendanceRoutes } from '@/routes/attendance.routes';
+import { adminRoutes } from '@/routes/admin.routes';
 
 export function createApp() {
   const app = express();
@@ -103,6 +104,7 @@ startxref
   app.use('/api/classes', classesRoutes);
   app.use('/api/grades', gradeRoutes);
   app.use('/api/attendance', attendanceRoutes);
+  app.use('/api/admin', adminRoutes);
 
   app.use(notFound);
   app.use(errorHandler);

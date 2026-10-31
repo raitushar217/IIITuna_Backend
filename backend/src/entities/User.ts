@@ -11,7 +11,7 @@ import {
   Unique,
 } from 'typeorm';
 
-export type UserRole = 'teacher' | 'student';
+export type UserRole = 'teacher' | 'student' | 'admin';
 
 @Entity({ name: 'users' })
 export class User {
@@ -107,6 +107,15 @@ export class Student {
   @Column({ type: 'varchar', length: 4 })
   batch!: string;
 
+  @Column({ type: 'int', default: 5 })
+  current_semester!: number;
+
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  enrolled_stream!: string | null;
+
+  @Column({ type: 'float', default: 8.0 })
+  cgpa!: number;
+
   @ManyToOne(() => Section, { onDelete: 'CASCADE', nullable: true })
   section?: Section;
 }
@@ -138,14 +147,26 @@ export class Subject {
   @PrimaryColumn({ type: 'varchar', length: 10 })
   subject_code!: string;
 
-  @ManyToOne(() => SpecializationBranch, { onDelete: 'CASCADE' })
-  specialization_branch!: SpecializationBranch;
+  @ManyToOne(() => SpecializationBranch, { onDelete: 'CASCADE', nullable: true })
+  specialization_branch?: SpecializationBranch;
 
   @Column({ type: 'varchar', length: 100 })
   subject_name!: string;
 
   @Column({ type: 'int', nullable: true })
   credits!: number | null;
+
+  @Column({ type: 'int', default: 5 })
+  semester!: number;
+
+  @Column({ type: 'varchar', length: 30, default: 'core' })
+  course_type!: 'core' | 'stream_elective' | 'open_elective' | 'lab';
+
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  stream_name!: string | null;
+
+  @Column({ type: 'varchar', length: 20, nullable: true })
+  prerequisite_course_code!: string | null;
 }
 
 @Entity({ name: 'teaching_assignments' })
@@ -184,6 +205,36 @@ export class StudentClassRegistration {
 
   @Column({ type: 'varchar', length: 20, default: 'accepted' })
   status!: 'pending' | 'accepted' | 'rejected';
+
+  @CreateDateColumn({ type: 'timestamptz' })
+  created_at!: Date;
+}
+
+@Entity({ name: 'proctoring_incidents' })
+export class ProctoringIncident {
+  @PrimaryGeneratedColumn('increment')
+  id!: number;
+
+  @Column({ type: 'varchar', length: 15 })
+  student_id!: string;
+
+  @Column({ type: 'varchar', length: 100 })
+  student_name!: string;
+
+  @Column({ type: 'varchar', length: 20 })
+  quiz_id!: string;
+
+  @Column({ type: 'varchar', length: 150 })
+  quiz_name!: string;
+
+  @Column({ type: 'varchar', length: 100 })
+  incident_type!: string;
+
+  @Column({ type: 'text', default: '' })
+  details!: string;
+
+  @Column({ type: 'varchar', length: 20, default: 'flagged' })
+  status!: 'flagged' | 'reviewed' | 'penalized' | 'dismissed';
 
   @CreateDateColumn({ type: 'timestamptz' })
   created_at!: Date;
