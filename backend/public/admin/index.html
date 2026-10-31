@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IIIT Una — Academic Administration Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-dark: #0f172a;
+      --primary-light: #3b82f6;
+      --accent: #d97706;
+      --success: #059669;
+      --danger: #dc2626;
+      --warning: #f59e0b;
+      --surface: #ffffff;
+      --background: #f8fafc;
+      --border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--background);
+      color: var(--text-main);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+    .brand-font {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .top-header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+      color: white;
+      padding: 1rem 2rem;
+      border-bottom: 3px solid var(--accent);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .iiit-logo-badge {
+      width: 48px;
+      height: 48px;
+      background: white;
+      color: #1e3a8a;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.25rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .nav-tabs-custom {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+    }
+    .nav-tabs-custom .nav-link {
+      color: var(--text-muted);
+      border: none;
+      padding: 1rem 1.25rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s ease;
+    }
+    .nav-tabs-custom .nav-link:hover {
+      color: var(--primary);
+    }
+    .nav-tabs-custom .nav-link.active {
+      color: var(--primary);
+      border-bottom: 3px solid var(--primary);
+      background: transparent;
+    }
+    .kpi-card {
+      background: white;
+      border-radius: 16px;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.07);
+    }
+    .kpi-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+    .table-container {
+      background: white;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .badge-stream {
+      background-color: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+      font-weight: 600;
+      padding: 0.35rem 0.65rem;
+      border-radius: 8px;
+      font-size: 0.75rem;
+    }
+    .badge-core {
+      background-color: #eff6ff;
+      color: #1e40af;
+      border: 1px solid #bfdbfe;
+      font-weight: 600;
+      padding: 0.35rem 0.65rem;
+      border-radius: 8px;
+      font-size: 0.75rem;
+    }
+    .badge-danger-soft {
+      background-color: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+      font-weight: 600;
+      padding: 0.35rem 0.65rem;
+      border-radius: 8px;
+      font-size: 0.75rem;
+    }
+    .badge-warning-soft {
+      background-color: #fffbeb;
+      color: #92400e;
+      border: 1px solid #fde68a;
+      font-weight: 600;
+      padding: 0.35rem 0.65rem;
+      border-radius: 8px;
+      font-size: 0.75rem;
+    }
+    .curriculum-card {
+      border-left: 4px solid var(--primary-light);
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 1.25rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+      margin-bottom: 1rem;
+      border-top: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .curriculum-card.stream-elective {
+      border-left: 4px solid var(--accent);
+      background: #fffdfa;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <header class="top-header d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center gap-3">
+      <div class="iiit-logo-badge brand-font">IIITU</div>
+      <div>
+        <h4 class="m-0 brand-font fw-bold" style="letter-spacing: -0.5px;">IIIT UNA • ACADEMIC ADMINISTRATION PORTAL</h4>
+        <small class="text-white-50">School of Computing & School of Electronics • Session 2026–2027</small>
+      </div>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+      <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50 px-3 py-2">
+        <i class="fa-solid fa-circle-check me-1"></i> Live Database Connected
+      </span>
+      <div id="authStatus" class="d-flex align-items-center gap-2">
+        <button id="btnLoginModal" class="btn btn-outline-light btn-sm px-3 fw-semibold" onclick="showLoginModal()">
+          <i class="fa-solid fa-right-to-bracket me-1"></i> Admin Login
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <nav class="nav nav-tabs nav-tabs-custom" id="mainTab" role="tablist">
+    <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab">
+      <i class="fa-solid fa-chart-pie me-2"></i>Executive Overview
+    </button>
+    <button class="nav-link" id="curriculum-tab" data-bs-toggle="tab" data-bs-target="#curriculum" type="button" role="tab" onclick="loadCurriculum()">
+      <i class="fa-solid fa-book-open me-2"></i>8-Semester Curriculum & Streams
+    </button>
+    <button class="nav-link" id="students-tab" data-bs-toggle="tab" data-bs-target="#students" type="button" role="tab" onclick="loadStudents()">
+      <i class="fa-solid fa-user-graduate me-2"></i>Student Roster (100 Students)
+    </button>
+    <button class="nav-link" id="defaulters-tab" data-bs-toggle="tab" data-bs-target="#defaulters" type="button" role="tab" onclick="loadDefaulters()">
+      <i class="fa-solid fa-triangle-exclamation me-2"></i>75% Attendance Defaulters
+    </button>
+    <button class="nav-link" id="proctoring-tab" data-bs-toggle="tab" data-bs-target="#proctoring" type="button" role="tab" onclick="loadIncidents()">
+      <i class="fa-solid fa-shield-halved me-2"></i>Quiz Proctoring Audit
+    </button>
+    <button class="nav-link" id="teachers-tab" data-bs-toggle="tab" data-bs-target="#teachers" type="button" role="tab" onclick="loadTeachers()">
+      <i class="fa-solid fa-chalkboard-user me-2"></i>Faculty Directory (10)
+    </button>
+  </nav>
+
+  <!-- Tab Contents -->
+  <main class="container-fluid px-4 py-4">
+    <div class="tab-content" id="mainTabContent">
+      
+      <!-- OVERVIEW TAB -->
+      <div class="tab-pane fade show active" id="overview" role="tabpanel">
+        <div class="row g-3 mb-4">
+          <div class="col-xl-2 col-md-4 col-sm-6">
+            <div class="kpi-card">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted fw-semibold small">Total Enrolled</span>
+                <div class="kpi-icon bg-primary bg-opacity-10 text-primary">
+                  <i class="fa-solid fa-user-graduate"></i>
+                </div>
+              </div>
+              <h2 class="fw-bold m-0" id="kpiStudents">102</h2>
+              <small class="text-muted">CSE, IT & ECE cohorts</small>
+            </div>
+          </div>
+          <div class="col-xl-2 col-md-4 col-sm-6">
+            <div class="kpi-card">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted fw-semibold small">Active Faculty</span>
+                <div class="kpi-icon bg-info bg-opacity-10 text-info">
+                  <i class="fa-solid fa-chalkboard-user"></i>
+                </div>
+              </div>
+              <h2 class="fw-bold m-0" id="kpiTeachers">10</h2>
+              <small class="text-muted">Across 3 Schools</small>
+            </div>
+          </div>
+          <div class="col-xl-2 col-md-4 col-sm-6">
+            <div class="kpi-card">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted fw-semibold small">Course Catalog</span>
+                <div class="kpi-icon bg-success bg-opacity-10 text-success">
+                  <i class="fa-solid fa-layer-group"></i>
+                </div>
+              </div>
+              <h2 class="fw-bold m-0" id="kpiCourses">10</h2>
+              <small class="text-muted">Core & Stream Electives</small>
+            </div>
+          </div>
+          <div class="col-xl-2 col-md-4 col-sm-6">
+            <div class="kpi-card">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted fw-semibold small">Avg Attendance</span>
+                <div class="kpi-icon bg-secondary bg-opacity-10 text-secondary">
+                  <i class="fa-solid fa-clipboard-check"></i>
+                </div>
+              </div>
+              <h2 class="fw-bold m-0" id="kpiAttendance">73%</h2>
+              <small class="text-muted">Mandatory cutoff: 75%</small>
+            </div>
+          </div>
+          <div class="col-xl-2 col-md-4 col-sm-6">
+            <div class="kpi-card border-danger border-opacity-25">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-danger fw-semibold small">Defaulters (&lt;75%)</span>
+                <div class="kpi-icon bg-danger bg-opacity-10 text-danger">
+                  <i class="fa-solid fa-user-xmark"></i>
+                </div>
+              </div>
+              <h2 class="fw-bold text-danger m-0" id="kpiDefaulters">3</h2>
+              <small class="text-muted">Pending End-Term Action</small>
+            </div>
+          </div>
+          <div class="col-xl-2 col-md-4 col-sm-6">
+            <div class="kpi-card border-warning border-opacity-25">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-warning fw-semibold small">Proctoring Flags</span>
+                <div class="kpi-icon bg-warning bg-opacity-10 text-warning">
+                  <i class="fa-solid fa-shield-cat"></i>
+                </div>
+              </div>
+              <h2 class="fw-bold text-warning m-0" id="kpiIncidents">2</h2>
+              <small class="text-muted">Mobile quiz alerts</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- System Architecture & Stream Engine Highlights -->
+        <div class="row g-3">
+          <div class="col-lg-8">
+            <div class="table-container p-4">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold m-0"><i class="fa-solid fa-diagram-project me-2 text-primary"></i>IIIT Una Stream Elective Specialization Engine</h5>
+                <span class="badge bg-primary px-3 py-2">Semesters 1 to 8 Dynamic Flow</span>
+              </div>
+              <p class="text-muted small">
+                In adherence with the IIIT Una academic regulations, students take unified institute foundational requirements in Semesters 1–4. 
+                At <strong>Semester 5</strong>, students select a specialization stream track. The elective choice in Semester 5 acts as an irreversible lock:
+                subsequent electives in <strong>Semesters 6, 7, and 8</strong> are constrained to that discipline.
+              </p>
+              <div class="row g-3 mt-2">
+                <div class="col-md-6">
+                  <div class="p-3 rounded-3 bg-light border">
+                    <h6 class="fw-bold text-primary mb-1"><i class="fa-solid fa-microchip me-2"></i>School of Computing Tracks (CSE / IT)</h6>
+                    <ul class="small m-0 ps-3 text-muted">
+                      <li><strong>Artificial Intelligence & Machine Learning (AI_ML)</strong>: CS502, Deep Learning, NLP, Vision</li>
+                      <li><strong>Data Science & Big Data (DATA_SCIENCE)</strong>: CS503, Spark, Predictive Modeling, Lakehouse</li>
+                      <li><strong>Cyber Security & Cryptography (CYBER_SECURITY)</strong>: CS504, Network Defenses, Ethical Hacking</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="p-3 rounded-3 bg-light border">
+                    <h6 class="fw-bold text-success mb-1"><i class="fa-solid fa-satellite-dish me-2"></i>School of Electronics Tracks (ECE)</h6>
+                    <ul class="small m-0 ps-3 text-muted">
+                      <li><strong>VLSI & Nanoelectronics (VLSI)</strong>: EC501, ASIC Design, Verilog HDL, Real-Time Architecture</li>
+                      <li><strong>Wireless Systems & IoT (COMMUNICATION)</strong>: EC502, Telemetry, Sensor Protocols, Edge Computing</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="table-container p-4">
+              <h5 class="fw-bold mb-3"><i class="fa-solid fa-building-columns me-2 text-primary"></i>Institute Profile</h5>
+              <div class="d-flex flex-column gap-3 small">
+                <div class="d-flex justify-content-between border-bottom pb-2">
+                  <span class="text-muted">Institute:</span>
+                  <span class="fw-bold">IIIT Una (Saloh Campus)</span>
+                </div>
+                <div class="d-flex justify-content-between border-bottom pb-2">
+                  <span class="text-muted">Primary Backend:</span>
+                  <span class="fw-bold">TypeORM / Node.js Express</span>
+                </div>
+                <div class="d-flex justify-content-between border-bottom pb-2">
+                  <span class="text-muted">Database Engine:</span>
+                  <span class="fw-bold text-success">Supabase PostgreSQL 15</span>
+                </div>
+                <div class="d-flex justify-content-between border-bottom pb-2">
+                  <span class="text-muted">Mobile Client:</span>
+                  <span class="fw-bold">Kotlin / MVVM Android Jetpack</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <span class="text-muted">Attendance Rule:</span>
+                  <span class="fw-bold text-danger">&ge; 75% for Exam Hall Ticket</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CURRICULUM TAB -->
+      <div class="tab-pane fade" id="curriculum" role="tabpanel">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div>
+            <h5 class="fw-bold m-0">8-Semester Curriculum & Stream Matrix</h5>
+            <small class="text-muted">Explore semester buckets and specialization elective rules</small>
+          </div>
+          <div class="d-flex gap-2">
+            <select id="curriculumBranchFilter" class="form-select form-select-sm" onchange="loadCurriculum()">
+              <option value="">All Branches</option>
+              <option value="CS">Computer Science & Eng (CSE)</option>
+              <option value="IT">Information Technology (IT)</option>
+              <option value="EC">Electronics & Comm (ECE)</option>
+            </select>
+          </div>
+        </div>
+
+        <ul class="nav nav-pills mb-3" id="semesterPills" role="tablist">
+          <li class="nav-item"><button class="nav-link active btn-sm" onclick="filterSemester(1, this)">Semester 1</button></li>
+          <li class="nav-item"><button class="nav-link btn-sm" onclick="filterSemester(2, this)">Semester 2</button></li>
+          <li class="nav-item"><button class="nav-link btn-sm" onclick="filterSemester(3, this)">Semester 3</button></li>
+          <li class="nav-item"><button class="nav-link btn-sm" onclick="filterSemester(4, this)">Semester 4</button></li>
+          <li class="nav-item"><button class="nav-link btn-sm fw-bold" onclick="filterSemester(5, this)">Semester 5 (Stream Lock)</button></li>
+          <li class="nav-item"><button class="nav-link btn-sm" onclick="filterSemester(6, this)">Semester 6</button></li>
+          <li class="nav-item"><button class="nav-link btn-sm" onclick="filterSemester(7, this)">Semester 7</button></li>
+          <li class="nav-item"><button class="nav-link btn-sm" onclick="filterSemester(8, this)">Semester 8</button></li>
+        </ul>
+
+        <div id="curriculumCardsContainer" class="row g-3">
+          <!-- Loaded dynamically -->
+        </div>
+      </div>
+
+      <!-- STUDENTS TAB -->
+      <div class="tab-pane fade" id="students" role="tabpanel">
+        <div class="table-container p-4">
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+            <div>
+              <h5 class="fw-bold m-0">Enrolled Student Directory (100 Demo Students)</h5>
+              <small class="text-muted">Browse students, view specialization tracks, or execute administrative overrides</small>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+              <input type="text" id="studentSearchInput" class="form-control form-control-sm" placeholder="Search Roll or Name..." style="width: 200px;" onkeyup="handleStudentSearch()">
+              <select id="studentSemFilter" class="form-select form-select-sm" style="width: 130px;" onchange="loadStudents()">
+                <option value="">All Semesters</option>
+                <option value="1">Semester 1</option>
+                <option value="3">Semester 3</option>
+                <option value="5">Semester 5</option>
+                <option value="7">Semester 7</option>
+              </select>
+              <select id="studentStreamFilter" class="form-select form-select-sm" style="width: 150px;" onchange="loadStudents()">
+                <option value="">All Streams</option>
+                <option value="AI_ML">AI / ML</option>
+                <option value="DATA_SCIENCE">Data Science</option>
+                <option value="CYBER_SECURITY">Cyber Security</option>
+                <option value="VLSI">VLSI</option>
+                <option value="COMMUNICATION">IoT / Comm</option>
+              </select>
+              <button class="btn btn-outline-secondary btn-sm" onclick="loadStudents()"><i class="fa-solid fa-arrows-rotate"></i> Refresh</button>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th>Roll Number</th>
+                  <th>Student Name</th>
+                  <th>Branch / Section</th>
+                  <th>Semester</th>
+                  <th>Specialization Stream</th>
+                  <th>CGPA</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="studentTableBody">
+                <tr><td colspan="7" class="text-center py-4 text-muted">Loading students...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- DEFAULTERS TAB -->
+      <div class="tab-pane fade" id="defaulters" role="tabpanel">
+        <div class="table-container p-4 border-danger border-opacity-25">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <h5 class="fw-bold text-danger m-0"><i class="fa-solid fa-triangle-exclamation me-2"></i>Attendance Defaulter Registry (&lt; 75% Attendance)</h5>
+              <small class="text-muted">Students listed below have breached the mandatory attendance threshold and are debarred from End-Term Examinations.</small>
+            </div>
+            <span class="badge bg-danger px-3 py-2 fs-6" id="defaultersCountBadge">3 Debarred</span>
+          </div>
+
+          <div class="table-responsive mt-3">
+            <table class="table table-hover align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th>Roll Number</th>
+                  <th>Student Name</th>
+                  <th>Branch</th>
+                  <th>Semester</th>
+                  <th>Total Conducted</th>
+                  <th>Attended</th>
+                  <th>Percentage</th>
+                  <th>Academic Action Status</th>
+                </tr>
+              </thead>
+              <tbody id="defaultersTableBody">
+                <tr><td colspan="8" class="text-center py-4 text-muted">Loading defaulters...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROCTORING TAB -->
+      <div class="tab-pane fade" id="proctoring" role="tabpanel">
+        <div class="table-container p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <h5 class="fw-bold m-0"><i class="fa-solid fa-shield-halved me-2 text-warning"></i>Mobile Quiz Proctoring & Malpractice Audit Log</h5>
+              <small class="text-muted">Real-time background violations detected by the Android Proctoring SDK during timed evaluations</small>
+            </div>
+            <button class="btn btn-outline-secondary btn-sm" onclick="loadIncidents()"><i class="fa-solid fa-arrows-rotate"></i> Refresh</button>
+          </div>
+
+          <div class="table-responsive mt-3">
+            <table class="table table-hover align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th>Incident ID</th>
+                  <th>Student</th>
+                  <th>Quiz Subject</th>
+                  <th>Violation Type</th>
+                  <th>Audit Details</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="incidentsTableBody">
+                <tr><td colspan="7" class="text-center py-4 text-muted">Loading incident audit logs...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TEACHERS TAB -->
+      <div class="tab-pane fade" id="teachers" role="tabpanel">
+        <div class="table-container p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <h5 class="fw-bold m-0"><i class="fa-solid fa-chalkboard-user me-2 text-primary"></i>Faculty Directory & Allocated Workloads (10 Faculty)</h5>
+              <small class="text-muted">Current academic teaching assignments across departments</small>
+            </div>
+            <button class="btn btn-outline-secondary btn-sm" onclick="loadTeachers()"><i class="fa-solid fa-arrows-rotate"></i> Refresh</button>
+          </div>
+
+          <div class="table-responsive mt-3">
+            <table class="table table-hover align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th>Teacher ID</th>
+                  <th>Faculty Name</th>
+                  <th>Department / School</th>
+                  <th>Allocated Courses</th>
+                  <th>Workload Count</th>
+                </tr>
+              </thead>
+              <tbody id="teachersTableBody">
+                <tr><td colspan="5" class="text-center py-4 text-muted">Loading teachers...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Login Modal -->
+  <div class="modal fade" id="loginModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title brand-font fw-bold"><i class="fa-solid fa-lock me-2"></i>Admin Authentication</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="alert alert-info py-2 small mb-3">
+            <i class="fa-solid fa-circle-info me-1"></i> Demo Credentials: User <strong>admin</strong> / Password <strong>admin123</strong>
+          </div>
+          <form id="loginForm" onsubmit="handleLogin(event)">
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Admin ID</label>
+              <input type="text" id="loginUsername" class="form-control" value="admin" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Password</label>
+              <input type="password" id="loginPassword" class="form-control" value="admin123" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 fw-bold">Sign In</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stream Override Modal -->
+  <div class="modal fade" id="streamModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow">
+        <div class="modal-header bg-dark text-white">
+          <h5 class="modal-title brand-font fw-bold"><i class="fa-solid fa-route me-2"></i>Override Specialization Stream</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <p class="small text-muted mb-3">
+            Administrative override for student <strong id="overrideStudentName"></strong> (<span id="overrideStudentRoll"></span>).
+            Changing the stream locks subsequent electives across Semesters 6, 7, and 8.
+          </p>
+          <input type="hidden" id="overrideStudentId">
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Select New Specialization Track</label>
+            <select id="newStreamSelect" class="form-select">
+              <option value="AI_ML">Artificial Intelligence & Machine Learning (AI_ML)</option>
+              <option value="DATA_SCIENCE">Data Science & Big Data (DATA_SCIENCE)</option>
+              <option value="CYBER_SECURITY">Cyber Security & Systems (CYBER_SECURITY)</option>
+              <option value="VLSI">VLSI Design & Hardware (VLSI)</option>
+              <option value="COMMUNICATION">IoT & Wireless Telemetry (COMMUNICATION)</option>
+            </select>
+          </div>
+          <button type="button" class="btn btn-primary w-100 fw-bold" onclick="submitStreamOverride()">Save & Lock Stream</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const API_BASE = window.location.origin + '/api';
+    let currentAuthToken = localStorage.getItem('iiitu_admin_token') || '';
+    let currentAdminUser = JSON.parse(localStorage.getItem('iiitu_admin_user') || 'null');
+    let currentSemesterView = 5;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateAuthUI();
+      loadStats();
+      loadCurriculum();
+    });
+
+    function showLoginModal() {
+      new bootstrap.Modal(document.getElementById('loginModal')).show();
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const id = document.getElementById('loginUsername').value;
+      const pass = document.getElementById('loginPassword').value;
+
+      try {
+        const res = await fetch(`${API_BASE}/users/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ identification_number: id, password: pass })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Login failed');
+
+        currentAuthToken = data.token;
+        currentAdminUser = data.user;
+        localStorage.setItem('iiitu_admin_token', currentAuthToken);
+        localStorage.setItem('iiitu_admin_user', JSON.stringify(currentAdminUser));
+
+        bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
+        updateAuthUI();
+        loadStats();
+        alert('Signed in successfully as Administrator!');
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    function logoutAdmin() {
+      localStorage.removeItem('iiitu_admin_token');
+      localStorage.removeItem('iiitu_admin_user');
+      currentAuthToken = '';
+      currentAdminUser = null;
+      updateAuthUI();
+    }
+
+    function updateAuthUI() {
+      const container = document.getElementById('authStatus');
+      if (currentAdminUser && currentAdminUser.role === 'admin') {
+        container.innerHTML = `
+          <div class="dropdown">
+            <button class="btn btn-outline-light btn-sm dropdown-toggle fw-semibold" type="button" data-bs-toggle="dropdown">
+              <i class="fa-solid fa-user-shield me-1"></i> ${currentAdminUser.name || 'Admin'}
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow">
+              <li><h6 class="dropdown-header">Admin ID: ${currentAdminUser.identification_number}</h6></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" href="javascript:void(0)" onclick="logoutAdmin()"><i class="fa-solid fa-right-from-bracket me-2"></i>Sign Out</a></li>
+            </ul>
+          </div>
+        `;
+      } else {
+        container.innerHTML = `
+          <button id="btnLoginModal" class="btn btn-outline-light btn-sm px-3 fw-semibold" onclick="showLoginModal()">
+            <i class="fa-solid fa-right-to-bracket me-1"></i> Admin Login
+          </button>
+        `;
+      }
+    }
+
+    async function loadStats() {
+      try {
+        const res = await fetch(`${API_BASE}/admin/stats`);
+        const result = await res.json();
+        if (result.ok && result.data) {
+          const d = result.data;
+          document.getElementById('kpiStudents').innerText = d.total_students;
+          document.getElementById('kpiTeachers').innerText = d.total_teachers;
+          document.getElementById('kpiCourses').innerText = d.total_courses;
+          document.getElementById('kpiAttendance').innerText = d.average_attendance_percentage + '%';
+          document.getElementById('kpiIncidents').innerText = d.flagged_proctoring_incidents;
+        }
+      } catch (e) {
+        console.error('Error fetching stats:', e);
+      }
+    }
+
+    function filterSemester(sem, btn) {
+      currentSemesterView = sem;
+      document.querySelectorAll('#semesterPills .nav-link').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      loadCurriculum();
+    }
+
+    async function loadCurriculum() {
+      const branch = document.getElementById('curriculumBranchFilter').value;
+      const container = document.getElementById('curriculumCardsContainer');
+      container.innerHTML = '<div class="col-12 text-center py-4 text-muted">Loading curriculum...</div>';
+
+      try {
+        const res = await fetch(`${API_BASE}/admin/curriculum?semester=${currentSemesterView}${branch ? '&branch=' + branch : ''}`);
+        const result = await res.json();
+        const subjects = result.data[currentSemesterView] || [];
+
+        if (subjects.length === 0) {
+          container.innerHTML = `<div class="col-12 text-center py-5 text-muted"><i class="fa-regular fa-folder-open fa-2x mb-2 d-block"></i>No subjects listed for Semester ${currentSemesterView} under this branch filter.</div>`;
+          return;
+        }
+
+        let html = '';
+        subjects.forEach(s => {
+          const isElective = s.course_type === 'stream_elective';
+          html += `
+            <div class="col-md-6 col-lg-4">
+              <div class="curriculum-card ${isElective ? 'stream-elective' : ''}">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <span class="badge ${isElective ? 'badge-stream' : 'badge-core'}">${s.subject_code}</span>
+                  <span class="badge bg-secondary bg-opacity-10 text-secondary">${s.credits || 3} Credits</span>
+                </div>
+                <h6 class="fw-bold mb-1">${s.subject_name}</h6>
+                <div class="d-flex align-items-center gap-2 mt-2">
+                  <span class="badge bg-light text-dark border">${s.course_type.replace('_', ' ').toUpperCase()}</span>
+                  ${s.stream_name ? `<span class="badge bg-warning bg-opacity-25 text-dark border border-warning"><i class="fa-solid fa-lock me-1"></i>${s.stream_name} Track</span>` : ''}
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        container.innerHTML = html;
+      } catch (err) {
+        container.innerHTML = `<div class="col-12 text-danger text-center">Failed to load curriculum: ${err.message}</div>`;
+      }
+    }
+
+    let searchTimer = null;
+    function handleStudentSearch() {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => {
+        loadStudents();
+      }, 350);
+    }
+
+    async function loadStudents() {
+      const sem = document.getElementById('studentSemFilter').value;
+      const stream = document.getElementById('studentStreamFilter').value;
+      const search = document.getElementById('studentSearchInput').value;
+      const tbody = document.getElementById('studentTableBody');
+      tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-muted">Loading students...</td></tr>';
+
+      let url = `${API_BASE}/admin/students?limit=100`;
+      if (sem) url += `&semester=${sem}`;
+      if (stream) url += `&stream=${stream}`;
+      if (search) url += `&search=${encodeURIComponent(search)}`;
+
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        const students = data.students || [];
+
+        if (students.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-muted">No students matching query.</td></tr>';
+          return;
+        }
+
+        let html = '';
+        students.forEach(s => {
+          const streamBadge = s.stream.includes('AI_ML') 
+            ? '<span class="badge-stream">AI / ML</span>' 
+            : s.stream.includes('DATA_SCIENCE') 
+            ? '<span class="badge bg-info bg-opacity-10 text-info border">Data Science</span>'
+            : s.stream.includes('CYBER_SECURITY')
+            ? '<span class="badge bg-danger bg-opacity-10 text-danger border">Cyber Security</span>'
+            : s.stream.includes('VLSI')
+            ? '<span class="badge bg-success bg-opacity-10 text-success border">VLSI</span>'
+            : `<span class="badge bg-light text-muted border">${s.stream}</span>`;
+
+          html += `
+            <tr>
+              <td class="fw-bold">${s.roll_number}</td>
+              <td>${s.name}</td>
+              <td><span class="badge bg-light text-dark border">${s.branch} • ${s.section}</span></td>
+              <td>Semester ${s.semester}</td>
+              <td>${streamBadge}</td>
+              <td class="fw-semibold text-primary">${s.cgpa}</td>
+              <td>
+                <button class="btn btn-outline-primary btn-sm px-2 py-1" onclick="openStreamOverride('${s.roll_number}', '${s.name}', '${s.stream}')">
+                  <i class="fa-solid fa-pen-to-square me-1"></i> Override Track
+                </button>
+              </td>
+            </tr>
+          `;
+        });
+        tbody.innerHTML = html;
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="7" class="text-danger text-center">Failed to load students: ${err.message}</td></tr>`;
+      }
+    }
+
+    function openStreamOverride(roll, name, currentStream) {
+      document.getElementById('overrideStudentRoll').innerText = roll;
+      document.getElementById('overrideStudentName').innerText = name;
+      document.getElementById('overrideStudentId').value = roll;
+      if (currentStream && document.querySelector(`#newStreamSelect option[value="${currentStream}"]`)) {
+        document.getElementById('newStreamSelect').value = currentStream;
+      }
+      new bootstrap.Modal(document.getElementById('streamModal')).show();
+    }
+
+    async function submitStreamOverride() {
+      const roll = document.getElementById('overrideStudentId').value;
+      const stream = document.getElementById('newStreamSelect').value;
+
+      try {
+        const res = await fetch(`${API_BASE}/admin/streams/lock`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ student_id: roll, stream_name: stream })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Failed to update stream');
+
+        bootstrap.Modal.getInstance(document.getElementById('streamModal')).hide();
+        alert(data.message || 'Stream updated successfully!');
+        loadStudents();
+      } catch (e) {
+        alert(e.message);
+      }
+    }
+
+    async function loadDefaulters() {
+      const tbody = document.getElementById('defaultersTableBody');
+      tbody.innerHTML = '<tr><td colspan="8" class="text-center py-4 text-muted">Loading defaulters...</td></tr>';
+
+      try {
+        const res = await fetch(`${API_BASE}/admin/attendance/defaulters?threshold=75`);
+        const data = await res.json();
+        const list = data.defaulters || [];
+
+        document.getElementById('defaultersCountBadge').innerText = `${list.length} Debarred`;
+        document.getElementById('kpiDefaulters').innerText = list.length;
+
+        if (list.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="8" class="text-center py-4 text-success"><i class="fa-solid fa-circle-check me-2"></i>No attendance defaulters. All students have &ge; 75% attendance.</td></tr>';
+          return;
+        }
+
+        let html = '';
+        list.forEach(d => {
+          html += `
+            <tr class="table-danger table-opacity-10">
+              <td class="fw-bold">${d.roll_number}</td>
+              <td class="fw-semibold">${d.name}</td>
+              <td>${d.branch}</td>
+              <td>Semester ${d.semester}</td>
+              <td>${d.total_sessions} Sessions</td>
+              <td>${d.attended_sessions} Attended</td>
+              <td><span class="badge bg-danger fs-6">${d.attendance_percentage}%</span></td>
+              <td>
+                <span class="badge badge-danger-soft text-danger border border-danger">
+                  <i class="fa-solid fa-ban me-1"></i> ${d.status}
+                </span>
+              </td>
+            </tr>
+          `;
+        });
+        tbody.innerHTML = html;
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="8" class="text-danger text-center">Failed to load defaulters: ${err.message}</td></tr>`;
+      }
+    }
+
+    async function loadIncidents() {
+      const tbody = document.getElementById('incidentsTableBody');
+      tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-muted">Loading incidents...</td></tr>';
+
+      try {
+        const res = await fetch(`${API_BASE}/admin/proctoring/incidents`);
+        const data = await res.json();
+        const list = data.data || [];
+
+        if (list.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-muted">No proctoring incidents flagged.</td></tr>';
+          return;
+        }
+
+        let html = '';
+        list.forEach(inc => {
+          const statusBadge = inc.status === 'flagged' 
+            ? '<span class="badge bg-danger">Flagged</span>' 
+            : inc.status === 'reviewed' 
+            ? '<span class="badge bg-info">Reviewed</span>' 
+            : inc.status === 'penalized' 
+            ? '<span class="badge bg-dark">Penalized</span>' 
+            : '<span class="badge bg-secondary">Dismissed</span>';
+
+          html += `
+            <tr>
+              <td>#${inc.id}</td>
+              <td><strong>${inc.student_name}</strong> (${inc.student_id})</td>
+              <td>${inc.quiz_name}</td>
+              <td><span class="badge bg-warning text-dark border">${inc.incident_type}</span></td>
+              <td class="small text-muted" style="max-width: 280px;">${inc.details}</td>
+              <td>${statusBadge}</td>
+              <td>
+                <div class="btn-group btn-group-sm">
+                  <button class="btn btn-outline-success" onclick="updateIncident(${inc.id}, 'reviewed')">Review</button>
+                  <button class="btn btn-outline-danger" onclick="updateIncident(${inc.id}, 'penalized')">Penalize</button>
+                  <button class="btn btn-outline-secondary" onclick="updateIncident(${inc.id}, 'dismissed')">Dismiss</button>
+                </div>
+              </td>
+            </tr>
+          `;
+        });
+        tbody.innerHTML = html;
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="7" class="text-danger text-center">Failed to load incidents: ${err.message}</td></tr>`;
+      }
+    }
+
+    async function updateIncident(id, status) {
+      try {
+        const res = await fetch(`${API_BASE}/admin/proctoring/incidents/${id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Failed to update incident');
+        loadIncidents();
+        loadStats();
+      } catch (e) {
+        alert(e.message);
+      }
+    }
+
+    async function loadTeachers() {
+      const tbody = document.getElementById('teachersTableBody');
+      tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">Loading teachers...</td></tr>';
+
+      try {
+        const res = await fetch(`${API_BASE}/admin/teachers`);
+        const data = await res.json();
+        const teachers = data.data || [];
+
+        if (teachers.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">No teachers found.</td></tr>';
+          return;
+        }
+
+        let html = '';
+        teachers.forEach(t => {
+          const courses = t.classes.map(c => `<span class="badge bg-light text-dark border me-1">${c.subject_code}: ${c.subject_name}</span>`).join(' ');
+          html += `
+            <tr>
+              <td class="fw-bold">${t.teacher_id}</td>
+              <td class="fw-semibold">${t.name}</td>
+              <td><span class="badge bg-primary bg-opacity-10 text-primary border">${t.department}</span></td>
+              <td>${courses || '<span class="text-muted small">None assigned</span>'}</td>
+              <td><span class="badge bg-secondary">${t.allocated_classes_count} Classes</span></td>
+            </tr>
+          `;
+        });
+        tbody.innerHTML = html;
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-danger text-center">Failed to load teachers: ${err.message}</td></tr>`;
+      }
+    }
+  </script>
+</body>
+</html>
+

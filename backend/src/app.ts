@@ -94,6 +94,16 @@ startxref
     }
   });
 
+  const adminDir = path.resolve(process.cwd(), 'public/admin');
+  app.use('/admin', express.static(adminDir));
+  app.get(['/admin', '/admin/*'], (_req, res) => {
+    res.sendFile(path.join(adminDir, 'index.html'));
+  });
+
+  app.get('/', (_req, res) => {
+    res.redirect('/admin');
+  });
+
   app.get('/health', (_req, res) => res.json({ ok: true }));
 
   app.use('/api/users', userRoutes);

@@ -43,6 +43,10 @@ export async function login(identification_number: string, password: string) {
     if (teacher) user_data.name = `${teacher.first_name} ${teacher.last_name}`;
   }
 
+  if (user.role === 'admin') {
+    user_data.name = 'Dean & Academic Administration, IIIT Una';
+  }
+
   return { token: token.key, user: user_data };
 }
 
